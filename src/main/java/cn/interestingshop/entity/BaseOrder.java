@@ -84,7 +84,7 @@ public class BaseOrder implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof BaseOrder){
-			if(((BaseOrder)obj).id==id){
+			if(((BaseOrder) obj).id.equals(id)){
 				return true;
 			}			
 		}	
