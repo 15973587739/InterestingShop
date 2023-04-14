@@ -1,0 +1,39 @@
+<component name="ArtifactManager">
+  <artifact type="exploded-war" name="InterestingShop:Web exploded">
+    <output-path>$PROJECT_DIR$/out/artifacts/InterestingShop_Web_exploded</output-path>
+    <root id="root">
+      <element id="dir-copy" path="$PROJECT_DIR$/web/WEB-INF/lib" />
+      <element id="directory" name="WEB-INF">
+        <element id="directory" name="classes">
+          <element id="module-output" name="InterestingShop" />
+        </element>
+        <element id="directory" name="lib">
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/jstl.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/standard.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.ejb.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.jms.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/sqljdbc2008.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/log4j-1.2.17.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.servlet.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/fastjson-1.2.6.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.resource.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/commons-logging.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/slf4j-api-1.6.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/commons-io-1.3.2.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.annotation.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/commons-codec-1.9.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.persistence.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.servlet.jsp.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/javax.transaction.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/commons-pool-1.5.6.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/slf4j-simple-1.6.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/commons-fileupload-1.2.1.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/alipay-sdk-java-3.6.0.ALL.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/mysql-connector-java-8.0.19.jar" />
+          <element id="file-copy" path="$PROJECT_DIR$/web/WEB-INF/lib/java_memcached-release_2.6.3.jar" />
+        </element>
+      </element>
+      <element id="javaee-facet-resources" facet="InterestingShop/web/Web" />
+    </root>
+  </artifact>
+</component>
