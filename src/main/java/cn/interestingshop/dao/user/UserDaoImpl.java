@@ -26,6 +26,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
      * @param user
      * @throws java.sql.SQLException
      */
+	@Override
     public int save(User user){//新增用户信息
     	Integer id=0;
     	try {
@@ -46,6 +47,7 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
     }
 
     //更新用户信息
+	@Override
     public int update(User user) {
 		Integer count=0;
 		try {
@@ -98,7 +100,8 @@ public class UserDaoImpl extends BaseDaoImpl implements UserDao {
 		}
 		return userList;
 	}
-	
+
+	@Override
 	public Integer selectCount() throws Exception {
 		List<Object> paramsList=new ArrayList<Object>();   
 		StringBuffer sql=new StringBuffer(" select count(*) count from t_user where 1=1 ");

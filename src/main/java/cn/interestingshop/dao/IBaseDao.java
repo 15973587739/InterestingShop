@@ -1,5 +1,9 @@
 package cn.interestingshop.dao;
 
+import cn.interestingshop.utils.Params;
+
+import java.util.List;
+
 /**
  * Created by bdqn on 2016/4/22.
  */
@@ -7,7 +11,7 @@ public interface IBaseDao {
 //	/**
 //	 * 查询单表的数目
 //	 * @param  params
-//	 * @return 
+//	 * @return
 //	 * @throws Exception
 //	 */
 //    public int getRowCount(Params params) throws Exception;
@@ -51,8 +55,8 @@ public interface IBaseDao {
 //    public void deleteById(Integer id) throws Exception;
 //    /**
 //     * 自定义sql的方法
-//     * @param sql
-//     * @param params
+//     * @param sqlStr
+//     * @param query
 //     */
 //    public List selectBySql(String sqlStr,Params query)throws Exception;
 }

@@ -20,9 +20,10 @@ public class BaseOrderDaoImpl extends BaseDaoImpl implements BaseOrderDao {
 
 	/**
 	 * 保存订单
-	 * @param order
+	 * @param baseOrder
 	 * @throws java.sql.SQLException
 	 */
+	@Override
 	public void save(BaseOrder baseOrder) {//保存订单
 		Integer id=0;
 		String sql="insert into t_base_order(userId,account,userAddress,createTime,amount,orderNo) values(?,?,?,?,?,?) ";
