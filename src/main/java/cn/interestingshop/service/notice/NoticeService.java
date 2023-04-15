@@ -16,12 +16,12 @@ public interface NoticeService{
 	 * @param parameter
 	 * @return
 	 */
-	Notice getById(String parameter);
+	Notice getById(Integer parameter);
 	/***
 	 * 删除新闻
 	 * @param id
 	 */
-	void deleteById(String id);
+	void deleteById(Integer id);
 	/***
 	 * 查询新闻列表
 	 * @param param
