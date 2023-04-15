@@ -3,119 +3,120 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
+import cn.interestingshop.dao.user.UserMapper;
+import cn.interestingshop.utils.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
 import cn.interestingshop.entity.User;
 import cn.interestingshop.utils.DataSourceUtil;
 
 public class UserServiceImpl implements UserService {
-	
+
 	private Logger logger = Logger.getLogger(UserServiceImpl.class);
-	
+
 	@Override
 	public boolean save(User user){
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			count=userDao.save(user);
-		} catch (SQLException e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(UserMapper.class).save(user)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return  count>0;
+		return flag;
 	}
 
 	@Override
 	public boolean update(User user) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			count=userDao.update(user);
-		} catch (SQLException e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(UserMapper.class).update(user)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return  count>0;
+		return flag;
 	}
 
 	@Override
 	public boolean deleteById(Integer userId) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			count=userDao.deleteById(userId+"");
-		} catch (SQLException e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(UserMapper.class).deleteById(userId)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return  count>0;
+		return flag;
 	}
 
 	@Override
 	public User getById(Integer userId, String loginName) {
-		Connection connection = null;
 		User user=null;
+		SqlSession sqlSession=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			user=userDao.selectById(userId,loginName);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+			sqlSession=MyBatisUtil.createSqlSession();
+			user = sqlSession.getMapper(UserMapper.class).selectById(userId, loginName);
+		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return user;
 	}
 
 	@Override
 	public List<User> getList(Integer currentPageNo, Integer pageSize) {
-		Connection connection = null;
+		SqlSession sqlSession=null;
 		List<User> userList=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			userList=userDao.selectList(currentPageNo,pageSize);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+			sqlSession=MyBatisUtil.createSqlSession();
+			userList = sqlSession.getMapper(UserMapper.class).selectList(currentPageNo, pageSize);
+		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return userList;
 	}
 
 	@Override
 	public int getCount() {
-		Connection connection = null;
-		Integer count=null;
+		int count = 0;
+		SqlSession sqlSession=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			UserDao userDao = new UserDaoImpl(connection);
-			count=userDao.selectCount();
-		} catch (SQLException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
+			sqlSession= MyBatisUtil.createSqlSession();
+			 count = sqlSession.getMapper(UserMapper.class).selectCount();
+
+		}catch (Exception e){
 			e.printStackTrace();
 		}finally {
-			DataSourceUtil.closeConnection(connection);
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return count;
 	}
