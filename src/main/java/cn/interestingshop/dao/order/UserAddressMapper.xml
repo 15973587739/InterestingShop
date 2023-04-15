@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.interestingshop.dao.order.UserAddressMapper">
+  <resultMap id="BaseResultMap" type="cn.interestingshop.entity.UserAddress">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="address" jdbcType="VARCHAR" property="address" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="remark" jdbcType="VARCHAR" property="remark" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, address, createTime, isDefault, remark
+  </sql>
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_user_address
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_user_address
+    <where>
+      <if test="param.userId != null">
+        and userId = =  #{param.userId,jdbcType=INTEGER}
+      </if>
+      <if test="param.address != null and param.address != ''">
+        and address like CONCAT ('%',#{param.address,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+    <if test="param.sort != null and param.sort != '' ">
+      order by = #{param.sort,jdbcType=INTEGER}
+    </if>
+    <if test="params.isPage">
+      limit  #{params.startIndex,jdbcType=INTEGER} ,  #{params.pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="cn.interestingshop.entity.UserAddress" useGeneratedKeys="true">
+    insert into t_user_address
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="address != null">
+        address,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="isDefault != null">
+        isDefault,
+      </if>
+      <if test="remark != null">
+        remark,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="address != null">
+        #{address,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="isDefault != null">
+        #{isDefault,jdbcType=INTEGER},
+      </if>
+      <if test="remark != null">
+        #{remark,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

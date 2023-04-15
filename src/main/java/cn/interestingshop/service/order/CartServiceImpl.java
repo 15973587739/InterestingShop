@@ -15,8 +15,9 @@ public class CartServiceImpl implements CartService {
     public ShopCart update(String goodsId, String buyNumStr, ShopCart cart) throws Exception {
     	Integer buyNum = 0;
     	Connection connection = null;
-    	if (!EmptyUtils.isEmpty(buyNumStr))
+    	if (!EmptyUtils.isEmpty(buyNumStr)) {
             buyNum = Integer.parseInt(buyNumStr);
+        }
         //便利购物车寻找该商品 修改其数量
         for (ShopGoods shopGoods : cart.getShopGoodsList()) {
             if (shopGoods.getGoods().getId().toString().equals(goodsId)) {

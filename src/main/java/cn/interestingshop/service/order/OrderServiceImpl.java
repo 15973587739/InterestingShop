@@ -6,17 +6,16 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import cn.interestingshop.dao.order.BaseOrderDao;
-import cn.interestingshop.dao.order.BaseOrderDaoImpl;
-import cn.interestingshop.dao.order.OrderInfoDao;
-import cn.interestingshop.dao.order.OrderInfoDaoImpl;
+import cn.interestingshop.dao.goods.GoodsMapper;
+import cn.interestingshop.dao.notice.NoticeMapper;
+import cn.interestingshop.dao.order.BaseOrderMapper;
+import cn.interestingshop.dao.order.OrderInfoMapper;
+import cn.interestingshop.dao.user.UserMapper;
 import cn.interestingshop.entity.BaseOrder;
 import cn.interestingshop.entity.OrderInfo;
 import cn.interestingshop.entity.User;
-import cn.interestingshop.utils.DataSourceUtil;
-import cn.interestingshop.utils.ShopCart;
-import cn.interestingshop.utils.ShopGoods;
-import cn.interestingshop.utils.StringUtils;
+import cn.interestingshop.utils.*;
+import org.apache.ibatis.session.SqlSession;
 
 public class OrderServiceImpl implements OrderService {
 
@@ -31,14 +30,10 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public BaseOrder pay(User user, ShopCart shopCart, String address) {
         // TODO Auto-generated method stub
-        Connection connection = null;
+        SqlSession sqlSession=null;
         BaseOrder baseOrder = new BaseOrder();
         try {
-            connection = DataSourceUtil.openConnection();
-            connection.setAutoCommit(false);
-            GoodsDao goodsDao = new GoodsDaoImpl(connection);
-            BaseOrderDao orderDao = new BaseOrderDaoImpl(connection);
-            OrderInfoDao orderInfoDao = new OrderInfoDaoImpl(connection);
+            sqlSession = MyBatisUtil.createSqlSession();
             //增加订单
             baseOrder.setUserId(user.getId());
             baseOrder.setAccount(user.getAccount());
@@ -46,7 +41,7 @@ public class OrderServiceImpl implements OrderService {
             baseOrder.setCreateTime(new Date());
             baseOrder.setAmount(shopCart.getAmount());
             baseOrder.setOrderNo(StringUtils.randomUUID());
-            orderDao.save(baseOrder);
+            sqlSession.getMapper(BaseOrderMapper.class).save(baseOrder);
             //增加订单对应的明细信息
             for (ShopGoods shopGoods : shopCart.getShopGoodsList()) {
                 OrderInfo orderInfo = new OrderInfo();
@@ -54,63 +49,48 @@ public class OrderServiceImpl implements OrderService {
                 orderInfo.setAmount(shopGoods.getAmount());
                 orderInfo.setGoods(shopGoods.getGoods());
                 orderInfo.setBuyNum(shopGoods.getBuyNum());
-                orderInfoDao.save(orderInfo);
+                sqlSession.getMapper(OrderInfoMapper.class).save(orderInfo);
                 //更新商品表的库存
-                goodsDao.updateStock(shopGoods.getGoods().getId(), shopGoods.getBuyNum());
-                connection.commit();
+                sqlSession.getMapper(GoodsMapper.class).updateStock(shopGoods.getGoods().getId(), shopGoods.getBuyNum());
+                sqlSession.commit();
             }
         } catch (Exception e) {
             // TODO: handle exception
             e.printStackTrace();
-            try {
-                connection.rollback();
-            } catch (SQLException e1) {
-                e1.printStackTrace();
-            }
+            sqlSession.rollback();
             baseOrder = null;
         } finally {
-            try {
-                connection.setAutoCommit(true);
-                DataSourceUtil.closeConnection(connection);
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return baseOrder;
     }
 
     @Override
     public List<BaseOrder> getBaseList(Integer userId, Integer currentPageNo, Integer pageSize) {
-        Connection connection = null;
+        SqlSession sqlSession=null;
         List<BaseOrder> orderList = new ArrayList<BaseOrder>();
         try {
-            connection = DataSourceUtil.openConnection();
-            BaseOrderDao orderDao = new BaseOrderDaoImpl(connection);
-            OrderInfoDao orderInfoDao=new OrderInfoDaoImpl(connection);
-            orderList = orderDao.selectList(userId, currentPageNo, pageSize);
-            for(BaseOrder baseOrder:orderList){
-            	baseOrder.setOrderInfoList(orderInfoDao.selectList(baseOrder.getId()));
-            }
-        } catch (Exception e) {
+            sqlSession=MyBatisUtil.createSqlSession();
+            orderList = sqlSession.getMapper(BaseOrderMapper.class).selectList(userId,currentPageNo,pageSize);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return orderList;
     }
 
     @Override
     public int count(Integer userId) {
-        Connection connection = null;
-        Integer count=0;
+        int count = 0;
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            BaseOrderDao orderDao = new BaseOrderDaoImpl(connection);
-            count=orderDao.selectCount(userId);
-        } catch (Exception e) {
+            sqlSession= MyBatisUtil.createSqlSession();
+            count = sqlSession.getMapper(BaseOrderMapper.class).selectCount(userId);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return count;
     }
@@ -120,16 +100,15 @@ public class OrderServiceImpl implements OrderService {
      */
     @Override
     public List<OrderInfo> getOrderInfoList(Integer orderId) {
-        Connection connection = null;
+        SqlSession sqlSession=null;
         List<OrderInfo> OrderInfoList = new ArrayList<OrderInfo>();
         try {
-            connection = DataSourceUtil.openConnection();
-            OrderInfoDao OrderInfoDao = new OrderInfoDaoImpl(connection);
-            OrderInfoList = OrderInfoDao.selectList(orderId);
-        } catch (Exception e) {
+            sqlSession=MyBatisUtil.createSqlSession();
+            OrderInfoList = sqlSession.getMapper(OrderInfoMapper.class).selectList(orderId);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return OrderInfoList;
     }

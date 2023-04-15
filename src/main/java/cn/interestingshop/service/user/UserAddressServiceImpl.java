@@ -4,11 +4,14 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.List;
 
-import cn.interestingshop.dao.order.UserAddressDao;
-import cn.interestingshop.dao.order.UserAddressDaoImpl;
+import cn.interestingshop.dao.order.UserAddressMapper;
+import cn.interestingshop.dao.user.UserMapper;
+import cn.interestingshop.entity.User;
 import cn.interestingshop.entity.UserAddress;
 import cn.interestingshop.param.UserAddressParam;
 import cn.interestingshop.utils.DataSourceUtil;
+import cn.interestingshop.utils.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
 
 /**
  * Created by bdqn on 2016/5/12.
@@ -21,21 +24,19 @@ public class UserAddressServiceImpl implements UserAddressService {
      * @return
      * @throws Exception
      */
+    @Override
     public List<UserAddress> getList(Integer id) throws Exception{
-        Connection connection = null;
-        List<UserAddress> userAddressList = null;
+        SqlSession sqlSession=null;
+        List<UserAddress> userAddressList=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            UserAddressDao userAddressDao = new UserAddressDaoImpl(connection);
+            sqlSession=MyBatisUtil.createSqlSession();
             UserAddressParam params = new UserAddressParam();
             params.setUserId(id);
-            userAddressList = userAddressDao.selectList(params);
-        } catch (SQLException e) {
+            userAddressList = sqlSession.getMapper(UserAddressMapper.class).selectList(params);
+        }catch (Exception e){
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
-        }finally{
-        	DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return userAddressList;
     }
@@ -48,41 +49,36 @@ public class UserAddressServiceImpl implements UserAddressService {
      */
     @Override
     public Integer save(Integer id, String address,String remark) {
-        Connection connection = null;
+        SqlSession session = null;
         Integer userAddressId = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            UserAddressDao userAddressDao = new UserAddressDaoImpl(connection);
+            session = MyBatisUtil.createSqlSession();
             UserAddress userAddress=new UserAddress();
             userAddress.setUserId(id);
             userAddress.setAddress(address);
             userAddress.setRemark(remark);
-            userAddressId = userAddressDao.save(userAddress);
-        } catch (SQLException e) {
+            userAddressId =session.getMapper(UserAddressMapper.class).save(userAddress);
+        }catch (Exception e){
             e.printStackTrace();
-        } catch (Exception e) {
-            e.printStackTrace();
+            session.rollback();
         }finally{
-        	DataSourceUtil.closeConnection(connection);
+            MyBatisUtil.closeSqlSession(session);
         }
         return userAddressId;
     }
 
     @Override
     public UserAddress getById(Integer id) {
-        Connection connection = null;
-        UserAddress userAddress= null;
+        UserAddress userAddress=new UserAddress();
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            UserAddressDao userAddressDao = new UserAddressDaoImpl(connection);
-            userAddress = (UserAddress) userAddressDao.selectById(id);
-        } catch (SQLException e) {
-            e.printStackTrace();
-        } catch (Exception e) {
+            sqlSession=MyBatisUtil.createSqlSession();
+            userAddress = sqlSession.getMapper(UserAddressMapper.class).selectById(id);
+        }catch (Exception e){
             e.printStackTrace();
         }finally {
-            DataSourceUtil.closeConnection(connection);
-            return  userAddress;
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
+        return userAddress;
     }
 }
