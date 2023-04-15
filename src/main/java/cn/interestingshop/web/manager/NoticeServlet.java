@@ -60,7 +60,7 @@ public class NoticeServlet extends AbstractServlet {
 	 */
 	public String noticeDetail(HttpServletRequest request,HttpServletResponse response)throws Exception{
 		String id = request.getParameter("id");
-		Notice Notice = noticeService.getById(id);
+		Notice Notice = noticeService.getById(Integer.valueOf(id));
 		request.setAttribute("Notice",Notice);
 		request.setAttribute("menu", 7);
 		return "/manager/notice/noticeDetail";
