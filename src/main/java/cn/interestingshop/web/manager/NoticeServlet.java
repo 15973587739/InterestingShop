@@ -19,6 +19,8 @@ public class NoticeServlet extends AbstractServlet {
 
 	private NoticeService noticeService;
 
+
+	@Override
 	public void init() throws ServletException {
 		this.noticeService = new NoticeServiceImpl();
 	}
