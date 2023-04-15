@@ -1,0 +1,100 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.interestingshop.dao.notice.NoticeMapper">
+  <resultMap id="BaseResultMap" type="cn.interestingshop.entity.Notice">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="title" jdbcType="VARCHAR" property="title" />
+    <result column="content" jdbcType="VARCHAR" property="content" />
+    <result column="createTime" jdbcType="VARCHAR" property="createTime" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, title, content, createTime
+  </sql>
+
+  <select id="selectCount" resultType="int">
+    select count(*) from t_notice
+    <where>
+      <if test="title != null and title != ''">
+        and title like CONCAT ('%',#{title,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+  </select>
+
+  <select id="selectList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_notice
+    <where>
+      <if test="title != null and title != ''">
+        and id = #{id,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_notice
+    <where>
+      <if test="title != null and title != ''">
+        and title like CONCAT ('%',#{title,jdbcType=VARCHAR},'%')
+      </if>
+    </where>
+    <if test="params.sort != null">
+      order by = #{params.sort,jdbcType=VARCHAR}
+    </if>
+    <if test="params.isPage">
+      limit  #{params.startIndex,jdbcType=INTEGER} ,  #{params.pageSize,jdbcType=INTEGER}
+    </if>
+  </select>
+
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from t_notice
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="cn.interestingshop.entity.Notice" useGeneratedKeys="true">
+    insert into t_notice
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        title,
+      </if>
+      <if test="content != null">
+        content,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="title != null">
+        #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="cn.interestingshop.entity.Notice">
+    update t_notice
+    <set>
+      <if test="title != null">
+        title = #{title,jdbcType=VARCHAR},
+      </if>
+      <if test="content != null">
+        content = #{content,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        createTime = #{createTime,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

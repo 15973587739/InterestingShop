@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.interestingshop.dao.order.BaseOrderMapper">
+  <resultMap id="BaseResultMap" type="cn.interestingshop.entity.BaseOrder">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="userId" jdbcType="INTEGER" property="userId" />
+    <result column="account" jdbcType="VARCHAR" property="account" />
+    <result column="userAddress" jdbcType="VARCHAR" property="userAddress" />
+    <result column="createTime" jdbcType="TIMESTAMP" property="createTime" />
+    <result column="amount" jdbcType="FLOAT" property="amount" />
+    <result column="orderNo" jdbcType="VARCHAR" property="orderNo" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, userId, account, userAddress, createTime, amount, orderNo
+  </sql>
+
+  <select id="selectCount" resultType="java.lang.Integer">
+    select count(*) from t_base_order
+    <where>
+      <if test="userId != null">
+        userId = #{userId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_base_order
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_base_order
+    <where>
+      <if test="userId != null">
+        userId = #{userId,jdbcType=INTEGER}
+      </if>
+    </where>
+    limit #{currentPageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from t_base_order
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="cn.interestingshop.entity.BaseOrder" useGeneratedKeys="true">
+    insert into t_base_order
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        userId,
+      </if>
+      <if test="account != null">
+        account,
+      </if>
+      <if test="userAddress != null">
+        userAddress,
+      </if>
+      <if test="createTime != null">
+        createTime,
+      </if>
+      <if test="amount != null">
+        amount,
+      </if>
+      <if test="orderNo != null">
+        orderNo,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="userId != null">
+        #{userId,jdbcType=INTEGER},
+      </if>
+      <if test="account != null">
+        #{account,jdbcType=VARCHAR},
+      </if>
+      <if test="userAddress != null">
+        #{userAddress,jdbcType=VARCHAR},
+      </if>
+      <if test="createTime != null">
+        #{createTime,jdbcType=TIMESTAMP},
+      </if>
+      <if test="amount != null">
+        #{amount,jdbcType=FLOAT},
+      </if>
+      <if test="orderNo != null">
+        #{orderNo,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+</mapper>

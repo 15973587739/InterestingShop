@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.interestingshop.dao.goods.ClassifyMapper">
+  <resultMap id="BaseResultMap" type="cn.interestingshop.entity.Classify">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="classifyName" jdbcType="VARCHAR" property="classifyName" />
+    <result column="parentId" jdbcType="INTEGER" property="parentId" />
+    <result column="type" jdbcType="INTEGER" property="type" />
+    <result column="icon" jdbcType="VARCHAR" property="icon" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, classifyName, parentId, `type`, icon
+  </sql>
+
+  <select id="selectCount" resultType="int" resultMap="BaseResultMap">
+    select count(*) from t_classify
+    <where>
+      <if test="title != null and title != ''">
+        and classifyName like CONCAT ('%',#{classifyName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="parentId != null">
+        and parentId =  #{parentId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_classify
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    SELECT
+        epc1.*,epc2.classifyName as parentName FROM t_classify epc1 LEFT JOIN t_classify epc2 ON epc1.parentId=epc2.id
+    <where>
+      <if test="param.classifyName != null and param.classifyName != ''">
+        and epc1.classifyName like CONCAT ('%',#{param.classifyName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="param.parentId != null">
+        and epc1.parentId =  #{param.parentId,jdbcType=INTEGER}
+      </if>
+      <if test="param.type != null ">
+        and epc1.type = #{param.type,jdbcType=INTEGER}
+      </if>
+      <if test="params.isPage">
+        limit  #{params.startIndex,jdbcType=INTEGER} ,  #{params.pageSize,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from t_classify
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="cn.interestingshop.entity.Classify" useGeneratedKeys="true">
+    insert into t_classify
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="classifyName != null">
+        classifyName,
+      </if>
+      <if test="parentId != null">
+        parentId,
+      </if>
+      <if test="type != null">
+        `type`,
+      </if>
+      <if test="icon != null">
+        icon,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="classifyName != null">
+        #{classifyName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        #{type,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        #{icon,jdbcType=VARCHAR},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="cn.interestingshop.entity.Classify">
+    update t_classify
+    <set>
+      <if test="classifyName != null">
+        classifyName = #{classifyName,jdbcType=VARCHAR},
+      </if>
+      <if test="parentId != null">
+        parentId = #{parentId,jdbcType=INTEGER},
+      </if>
+      <if test="type != null">
+        `type` = #{type,jdbcType=INTEGER},
+      </if>
+      <if test="icon != null">
+        icon = #{icon,jdbcType=VARCHAR},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+</mapper>

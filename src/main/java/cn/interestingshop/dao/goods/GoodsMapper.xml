@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="cn.interestingshop.dao.goods.GoodsMapper">
+  <resultMap id="BaseResultMap" type="cn.interestingshop.entity.Goods">
+    <id column="id" jdbcType="INTEGER" property="id" />
+    <result column="goodsName" jdbcType="VARCHAR" property="goodsName" />
+    <result column="goodsDesc" jdbcType="VARCHAR" property="goodsDesc" />
+    <result column="price" jdbcType="FLOAT" property="price" />
+    <result column="stock" jdbcType="INTEGER" property="stock" />
+    <result column="classifyLevel1Id" jdbcType="INTEGER" property="classifyLevel1Id" />
+    <result column="classifyLevel2Id" jdbcType="INTEGER" property="classifyLevel2Id" />
+    <result column="classifyLevel3Id" jdbcType="INTEGER" property="classifyLevel3Id" />
+    <result column="fileName" jdbcType="VARCHAR" property="fileName" />
+  </resultMap>
+  <sql id="Base_Column_List">
+    id, goodsName, goodsDesc, price, stock, classifyLevel1Id, classifyLevel2Id, classifyLevel3Id, 
+    fileName, isDelete
+  </sql>
+
+  <select id="selectCount" resultType="int" resultMap="BaseResultMap">
+    select count(*) from t_goods
+    <where>
+      <if test="goodsName != null and goodsName != ''">
+        and goodsName like CONCAT ('%',#{goodsName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="categoryId != null">
+        and classifyLevel1Id = #{categoryId,jdbcType=INTEGER}
+        or classifyLevel2Id = #{categoryId,jdbcType=INTEGER}
+        or classifyLevel3Id = #{categoryId,jdbcType=INTEGER}
+      </if>
+    </where>
+  </select>
+
+  <select id="selectById" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select 
+    <include refid="Base_Column_List" />
+    from t_goods
+    where id = #{id,jdbcType=INTEGER}
+  </select>
+
+  <select id="selectList" parameterType="java.lang.Integer" resultMap="BaseResultMap">
+    select
+    <include refid="Base_Column_List" />
+    from t_goods
+    <where>
+      <if test="goodsName != null and goodsName != ''">
+        and goodsName like CONCAT ('%',#{goodsName,jdbcType=VARCHAR},'%')
+      </if>
+      <if test="categoryId != null">
+        and classifyLevel1Id = #{categoryId,jdbcType=INTEGER}
+        or classifyLevel2Id = #{categoryId,jdbcType=INTEGER}
+        or classifyLevel3Id = #{categoryId,jdbcType=INTEGER}
+      </if>
+    </where>
+    limit #{currentPageNo,jdbcType=INTEGER}, #{pageSize,jdbcType=INTEGER}
+  </select>
+
+  <delete id="deleteById" parameterType="java.lang.Integer">
+    delete from t_goods
+    where id = #{id,jdbcType=INTEGER}
+  </delete>
+
+
+  <insert id="save" keyColumn="id" keyProperty="id" parameterType="cn.interestingshop.entity.Goods" useGeneratedKeys="true">
+    insert into t_goods
+    <trim prefix="(" suffix=")" suffixOverrides=",">
+      <if test="goodsName != null">
+        goodsName,
+      </if>
+      <if test="goodsDesc != null">
+        goodsDesc,
+      </if>
+      <if test="price != null">
+        price,
+      </if>
+      <if test="stock != null">
+        stock,
+      </if>
+      <if test="classifyLevel1Id != null">
+        classifyLevel1Id,
+      </if>
+      <if test="classifyLevel2Id != null">
+        classifyLevel2Id,
+      </if>
+      <if test="classifyLevel3Id != null">
+        classifyLevel3Id,
+      </if>
+      <if test="fileName != null">
+        fileName,
+      </if>
+      <if test="isDelete != null">
+        isDelete,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides=",">
+      <if test="goodsName != null">
+        #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsDesc != null">
+        #{goodsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        #{price,jdbcType=FLOAT},
+      </if>
+      <if test="stock != null">
+        #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel1Id != null">
+        #{classifyLevel1Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel2Id != null">
+        #{classifyLevel2Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel3Id != null">
+        #{classifyLevel3Id,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null">
+        #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        #{isDelete,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+
+  <update id="update" parameterType="cn.interestingshop.entity.Goods">
+    update t_goods
+    <set>
+      <if test="goodsName != null">
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsDesc != null">
+        goodsDesc = #{goodsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=FLOAT},
+      </if>
+      <if test="stock != null">
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel1Id != null">
+        classifyLevel1Id = #{classifyLevel1Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel2Id != null">
+        classifyLevel2Id = #{classifyLevel2Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel3Id != null">
+        classifyLevel3Id = #{classifyLevel3Id,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null">
+        fileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        isDelete = #{isDelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+
+  <update id="updateStock" parameterType="cn.interestingshop.entity.Goods">
+    update t_goods
+    <set>
+      <if test="goodsName != null">
+        goodsName = #{goodsName,jdbcType=VARCHAR},
+      </if>
+      <if test="goodsDesc != null">
+        goodsDesc = #{goodsDesc,jdbcType=VARCHAR},
+      </if>
+      <if test="price != null">
+        price = #{price,jdbcType=FLOAT},
+      </if>
+      <if test="stock != null">
+        stock = #{stock,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel1Id != null">
+        classifyLevel1Id = #{classifyLevel1Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel2Id != null">
+        classifyLevel2Id = #{classifyLevel2Id,jdbcType=INTEGER},
+      </if>
+      <if test="classifyLevel3Id != null">
+        classifyLevel3Id = #{classifyLevel3Id,jdbcType=INTEGER},
+      </if>
+      <if test="fileName != null">
+        fileName = #{fileName,jdbcType=VARCHAR},
+      </if>
+      <if test="isDelete != null">
+        isDelete = #{isDelete,jdbcType=INTEGER},
+      </if>
+    </set>
+    where id = #{id,jdbcType=INTEGER}
+  </update>
+</mapper>
