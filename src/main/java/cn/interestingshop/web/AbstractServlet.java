@@ -21,11 +21,13 @@ public abstract class AbstractServlet extends HttpServlet {
 
     public abstract Class getServletClass();
 
+    @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
         doPost(req, resp);
     }
 
+    @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String actionIndicator = req.getParameter("action");
         Method method = null;

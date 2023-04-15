@@ -29,6 +29,7 @@ public class GoodsServlet extends AbstractServlet {
     private ClassifyService classifyService;
 
 
+    @Override
     public void init() throws ServletException {
         goodsService = new GoodsServiceImpl();
         classifyService=new ClassifyServiceImpl();
