@@ -6,8 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import cn.interestingshop.dao.BaseDaoImpl;
-import cn.interestingshop.dao.goods.GoodsDao;
-import cn.interestingshop.dao.goods.GoodsDaoImpl;
 import cn.interestingshop.entity.Goods;
 import cn.interestingshop.entity.OrderInfo;
 import cn.interestingshop.param.OrderInfoParam;

@@ -4,13 +4,17 @@ import java.sql.Connection;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.interestingshop.dao.goods.ClassifyDao;
-import cn.interestingshop.dao.goods.ClassifyDaoImpl;
+import cn.interestingshop.dao.goods.ClassifyMapper;
+import cn.interestingshop.dao.notice.NoticeMapper;
+import cn.interestingshop.dao.user.UserMapper;
 import cn.interestingshop.entity.Classify;
+import cn.interestingshop.entity.User;
 import cn.interestingshop.param.ClassifyParam;
 import cn.interestingshop.utils.ClassifyVo;
 import cn.interestingshop.utils.DataSourceUtil;
 import cn.interestingshop.utils.EmptyUtils;
+import cn.interestingshop.utils.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
 
 /**
  * Created by bdqn on 2016/5/8.
@@ -23,63 +27,61 @@ public class ClassifyServiceImpl implements ClassifyService {
      */
     @Override
     public Classify getById(Integer id) {
-        Connection connection = null;
         Classify classify = null;
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            classify =classifyDao.selectById(id);
-        } catch (Exception e) {
+            sqlSession=MyBatisUtil.createSqlSession();
+            classify = sqlSession.getMapper(ClassifyMapper.class).selectById(id);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return classify;
     }
 
     @Override
     public List<Classify> getList(ClassifyParam params) {
-        Connection connection = null;
         List<Classify> rtn = null;
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            rtn = classifyDao.selectList(params);
-        } catch (Exception e) {
+            sqlSession=MyBatisUtil.createSqlSession();
+            rtn = sqlSession.getMapper(ClassifyMapper.class).selectList(params);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
         return rtn;
     }
 
     @Override
     public int getCount(ClassifyParam params) {
-        Connection connection = null;
-        int rtn = 0;
+        int count = 0;
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            rtn = classifyDao.selectCount(params);
-        } catch (Exception e) {
+            sqlSession= MyBatisUtil.createSqlSession();
+            count = sqlSession.getMapper(ClassifyMapper.class).selectCount(params);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
-        return rtn;
+        return count;
     }
 
     @Override
     public void update(Classify classify) {
-        Connection connection = null;
+        SqlSession session = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            classifyDao.update(classify);
-        } catch (Exception e) {
+            session = MyBatisUtil.createSqlSession();
+            session.getMapper(ClassifyMapper.class).update(classify);
+            session.commit();
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+            session.rollback();
+        }finally{
+            MyBatisUtil.closeSqlSession(session);
         }
     }
     /**
@@ -87,15 +89,16 @@ public class ClassifyServiceImpl implements ClassifyService {
      */
     @Override
     public void save(Classify classify) {
-        Connection connection = null;
+        SqlSession session = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            classifyDao.save(classify);
-        } catch (Exception e) {
+            session = MyBatisUtil.createSqlSession();
+            session.getMapper(ClassifyMapper.class).save(classify);
+            session.commit();
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+            session.rollback();
+        }finally{
+            MyBatisUtil.closeSqlSession(session);
         }
     }
     /**
@@ -104,15 +107,16 @@ public class ClassifyServiceImpl implements ClassifyService {
      */
     @Override
     public void deleteById(Integer id) {
-        Connection connection = null;
+        SqlSession session = null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
-            classifyDao.deleteById(id);
-        } catch (Exception e) {
+            session = MyBatisUtil.createSqlSession();
+            session.getMapper(ClassifyMapper.class).deleteById(id);
+            session.commit();
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+            session.rollback();
+        }finally{
+            MyBatisUtil.closeSqlSession(session);
         }
     }
     /**
@@ -158,23 +162,22 @@ public class ClassifyServiceImpl implements ClassifyService {
      * @return
      */
     private List<Classify> getGoodsCategories(Integer parentId) {//根据父ID查询所有子商品分类
-        Connection connection = null;
-        List<Classify> classifyList = null;
+        List<Classify> rtn = null;
+        SqlSession sqlSession=null;
         try {
-            connection = DataSourceUtil.openConnection();
-            ClassifyDao classifyDao = new ClassifyDaoImpl(connection);
             ClassifyParam params = new ClassifyParam();
+            sqlSession=MyBatisUtil.createSqlSession();
             if (EmptyUtils.isNotEmpty(parentId)) {
-            	params.setParentId(parentId);
+                params.setParentId(parentId);
             } else {
-            	params.setParentId(0);
+                params.setParentId(0);
             }
-            classifyList = classifyDao.selectList(params);
-        } catch (Exception e) {
+            rtn = sqlSession.getMapper(ClassifyMapper.class).selectList(params);
+        }catch (Exception e){
             e.printStackTrace();
-        } finally {
-            DataSourceUtil.closeConnection(connection);
+        }finally {
+            MyBatisUtil.closeSqlSession(sqlSession);
         }
-        return classifyList;
+        return rtn;
     }
 }

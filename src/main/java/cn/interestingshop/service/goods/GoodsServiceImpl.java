@@ -2,10 +2,12 @@ package cn.interestingshop.service.goods;
 import java.sql.Connection;
 import java.util.List;
 
+import cn.interestingshop.dao.goods.GoodsMapper;
+import cn.interestingshop.dao.user.UserMapper;
+import cn.interestingshop.utils.MyBatisUtil;
+import org.apache.ibatis.session.SqlSession;
 import org.apache.log4j.Logger;
 
-import cn.interestingshop.dao.goods.GoodsDao;
-import cn.interestingshop.dao.goods.GoodsDaoImpl;
 import cn.interestingshop.entity.Goods;
 import cn.interestingshop.utils.DataSourceUtil;
 
@@ -18,114 +20,127 @@ public class GoodsServiceImpl implements GoodsService {
 	
 	@Override
 	public boolean save(Goods goods) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			count=goodsDao.save(goods);
-		} catch (Exception e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(GoodsMapper.class).save(goods)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return count>0;
+		return flag;
 	}
 
 	@Override
 	public boolean update(Goods goods) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			count=goodsDao.update(goods);
-		} catch (Exception e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(GoodsMapper.class).update(goods)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return count>0;
+		return flag;
 	}
 
 	@Override
 	public boolean deleteById(Integer goodsId) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			count=goodsDao.deleteById(goodsId);
-		} catch (Exception e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(GoodsMapper.class).deleteById(goodsId)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return count>0;
+		return flag;
 	}
 
 	@Override
 	public Goods getById(Integer goodsId) {
-		Connection connection = null;
 		Goods goods=null;
+		SqlSession sqlSession=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			goods=goodsDao.selectById(goodsId);
-		} catch (Exception e) {
+			sqlSession=MyBatisUtil.createSqlSession();
+			goods = sqlSession.getMapper(GoodsMapper.class).selectById(goodsId);
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+		}finally {
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return goods;
 	}
 
 	@Override
 	public List<Goods> getList(Integer currentPageNo,Integer pageSize,String goodsName, Integer categoryId) {
-		Connection connection = null;
+		SqlSession sqlSession=null;
 		List<Goods> productList=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			productList=goodsDao.selectList(currentPageNo,pageSize,goodsName,categoryId);
-		} catch (Exception e) {
+			sqlSession=MyBatisUtil.createSqlSession();
+			productList = sqlSession.getMapper(GoodsMapper.class).selectList(currentPageNo, pageSize,goodsName,categoryId);
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+		}finally {
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return productList;
 	}
 
 	@Override
 	public int getCount(String goodsName,Integer categoryId) {
-		Connection connection = null;
 		Integer count=0;
+		SqlSession sqlSession=null;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			count=goodsDao.selectCount(goodsName,categoryId);
-		} catch (Exception e) {
+			sqlSession= MyBatisUtil.createSqlSession();
+			count = sqlSession.getMapper(GoodsMapper.class).selectCount(goodsName,categoryId);
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+		}finally {
+			MyBatisUtil.closeSqlSession(sqlSession);
 		}
 		return count;
 	}
 
 	@Override
 	public boolean updateStock(Integer goodsId, Integer stock) {
-		Connection connection = null;
-		Integer count=0;
+		SqlSession session = null;
+		Boolean flag = false;
 		try {
-			connection = DataSourceUtil.openConnection();
-			GoodsDao goodsDao = new GoodsDaoImpl(connection);
-			count=goodsDao.updateStock(goodsId,stock);
-		} catch (Exception e) {
+			session = MyBatisUtil.createSqlSession();
+			if (session.getMapper(GoodsMapper.class).updateStock(goodsId,stock)>0){
+				flag = true;
+				session.commit();
+			}
+		}catch (Exception e){
 			e.printStackTrace();
-		} finally {
-			DataSourceUtil.closeConnection(connection);
+			session.rollback();
+			flag = false;
+		}finally{
+			MyBatisUtil.closeSqlSession(session);
 		}
-		return count>0;
+		return flag;
 	}
    
 }
