@@ -5,8 +5,6 @@ import java.util.List;
 
 import org.apache.log4j.Logger;
 
-import cn.interestingshop.dao.user.UserDao;
-import cn.interestingshop.dao.user.UserDaoImpl;
 import cn.interestingshop.entity.User;
 import cn.interestingshop.utils.DataSourceUtil;
 
